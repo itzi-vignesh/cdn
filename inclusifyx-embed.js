@@ -38,9 +38,9 @@
   }
 
   // ============================================
-  // CONFIGURATION - Your CDN URL
+  // CONFIGURATION - Change this to your domain
   // ============================================
-  const CDN_BASE_URL = 'https://cdn.hack4life.me';
+  const CDN_BASE_URL = 'https://your-domain.com'; // 👈 CHANGE THIS!
   
   // Default configuration
   const defaultConfig = {
@@ -48,7 +48,7 @@
     position: 'right', // 'left' or 'right'
     language: 'en',
     autoInit: true,
-    debug: true,  // Enable debug mode to see loading issues
+    debug: false,
   };
 
   // Merge with user config
@@ -66,20 +66,19 @@
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = config.cdnUrl + '/inclusifyx-widget.css';
+    // Version updated: 2025-11-17 17:30 - Cache-busting
+    const version = Date.now(); // Cache-busting timestamp
+    link.href = config.cdnUrl + '/inclusifyx-widget.css?v=' + version;
     
     link.onload = function() {
-      log('✅ CSS loaded from: ' + link.href);
+      log('CSS loaded');
       callback(null);
     };
     
     link.onerror = function() {
-      console.error('[InclusifyX] ❌ Failed to load CSS from: ' + link.href);
-      console.error('[InclusifyX] Check: 1) File exists on server, 2) CORS headers enabled, 3) SSL certificate valid');
       callback(new Error('Failed to load CSS'));
     };
     
-    log('Loading CSS from: ' + link.href);
     document.head.appendChild(link);
   }
 
@@ -87,21 +86,20 @@
   function loadJS(callback) {
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = config.cdnUrl + '/inclusifyx-widget.js';
+    // Version updated: 2025-11-17 17:30 - Fixed routing issue (removed 404 page)
+    const version = Date.now(); // Cache-busting timestamp
+    script.src = config.cdnUrl + '/inclusifyx-widget.js?v=' + version;
     script.defer = true;
     
     script.onload = function() {
-      log('✅ JavaScript loaded from: ' + script.src);
+      log('JavaScript loaded');
       callback(null);
     };
     
     script.onerror = function() {
-      console.error('[InclusifyX] ❌ Failed to load JS from: ' + script.src);
-      console.error('[InclusifyX] Check: 1) File exists on server, 2) CORS headers enabled, 3) SSL certificate valid');
       callback(new Error('Failed to load JavaScript'));
     };
     
-    log('Loading JavaScript from: ' + script.src);
     document.head.appendChild(script);
   }
 

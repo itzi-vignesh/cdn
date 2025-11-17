@@ -38,9 +38,9 @@
   }
 
   // ============================================
-  // CONFIGURATION - Change this to your domain
+  // CONFIGURATION - Your CDN URL
   // ============================================
-  const CDN_BASE_URL = 'https://cdn.hack4life.me'; // 👈 CHANGE THIS!
+  const CDN_BASE_URL = 'https://cdn.hack4life.me';
   
   // Default configuration
   const defaultConfig = {
@@ -48,7 +48,7 @@
     position: 'right', // 'left' or 'right'
     language: 'en',
     autoInit: true,
-    debug: false,
+    debug: true,  // Enable debug mode to see loading issues
   };
 
   // Merge with user config
@@ -69,14 +69,17 @@
     link.href = config.cdnUrl + '/inclusifyx-widget.css';
     
     link.onload = function() {
-      log('CSS loaded');
+      log('✅ CSS loaded from: ' + link.href);
       callback(null);
     };
     
     link.onerror = function() {
+      console.error('[InclusifyX] ❌ Failed to load CSS from: ' + link.href);
+      console.error('[InclusifyX] Check: 1) File exists on server, 2) CORS headers enabled, 3) SSL certificate valid');
       callback(new Error('Failed to load CSS'));
     };
     
+    log('Loading CSS from: ' + link.href);
     document.head.appendChild(link);
   }
 
@@ -88,14 +91,17 @@
     script.defer = true;
     
     script.onload = function() {
-      log('JavaScript loaded');
+      log('✅ JavaScript loaded from: ' + script.src);
       callback(null);
     };
     
     script.onerror = function() {
+      console.error('[InclusifyX] ❌ Failed to load JS from: ' + script.src);
+      console.error('[InclusifyX] Check: 1) File exists on server, 2) CORS headers enabled, 3) SSL certificate valid');
       callback(new Error('Failed to load JavaScript'));
     };
     
+    log('Loading JavaScript from: ' + script.src);
     document.head.appendChild(script);
   }
 
